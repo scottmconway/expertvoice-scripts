@@ -15,9 +15,12 @@ Generates a CSV file of the entire ExpertVoice inventory. CSV entries contain th
 * brand
 * name
 * price
-* msrp
+* MSRP (according to ExpertVoice)
 * category (Apparel, Accessories, etc.)
 
+Note - as of writing (2023-11-27), ExpertVoice will return an HTTP 500 if you attempt to request product information past the 10,000th element in a given category. The solution to this (while it remains broken on EV's side) is to use nested categories when a given category exceeds 10,000 products. The `depth` parameter in this script is currently hard-coded to `6` to reveal all subcategories. Any value higher than `6` will cause EV to respond with an HTTP 500. Classic.
+
+TODO
 
 #### Arguments
 |Short Name|Long Name|Type|Description|
@@ -33,7 +36,7 @@ Your account's unlockable deals can be found [here](https://www.expertvoice.com/
 If run without the `--cheat-sheet` argument, the script will use brute force to enumerate possible answers to questions.
 If a cheat sheet is provided, correct answers will be attempted first, before falling back to brute force if the provided answer was incorrect/invalid.
 
-The `--save-cheat-sheet` argument will save the _entire_ cheat sheet - what was discovered during exeuction as well as the cheat sheet provided by the `--cheat-sheet` argument, if applicable - to a local JSON file.
+The `--save-cheat-sheet` argument will save the _entire_ cheat sheet - what was discovered during execution as well as the cheat sheet provided by the `--cheat-sheet` argument, if applicable - to a local JSON file.
 
 The paths to `--cheat-sheet` and `--save-cheat-sheet` cannot be the same, as to view the cheat sheet in a read-only context.
 

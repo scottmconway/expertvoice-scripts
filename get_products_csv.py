@@ -30,8 +30,9 @@ def main():
     ev = ExpertvoiceClient(config)
     all_products = dict()
 
-    for category_id, category_name in ev.categories.items():
-        all_products[category_name] = ev.get_products(category_id)
+    for category_dict in ev.get_categories(depth=6):
+        if "taxonomy" not in category_dict:
+            all_products[category_dict["name"]] = ev.get_products(category_dict["id"])
 
     product_rows = list()
 
