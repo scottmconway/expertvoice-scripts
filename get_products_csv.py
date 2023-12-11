@@ -22,6 +22,18 @@ def main():
         default="./out.csv",
         help="The path at which to save the products CSV. Defaults to ./out.csv",
     )
+    parser.add_argument(
+        "--short-category-names",
+        action="store_true",
+        help="If set, only show the bottom-most level in category names"
+    )
+    parser.add_argument(
+        "--category-ids",
+        type=int,
+        nargs="*",
+        help="If specified, any number of category IDs. "
+        "Else, all categories will be downloaded",
+    )
     args = parser.parse_args()
 
     with open(args.config, "r") as f:
@@ -30,18 +42,25 @@ def main():
     ev = ExpertvoiceClient(config)
     all_products = dict()
 
-    for category_dict in ev.get_categories(depth=6):
-        if "taxonomy" not in category_dict:
-            all_products[category_dict["name"]] = ev.get_products(category_dict["id"])
-
+    categories = ev.get_categories(depth=6, short_category_name=args.short_category_names)
     product_rows = list()
 
-    for category_name, products in all_products.items():
-        for product in products:
-            product["category"] = category_name
-            product_rows.append(product)
+    for category_dict in categories:
+        category_products = list()
+        if args.category_ids:
+            if "id" in category_dict and category_dict["id"] in args.category_ids:
+                category_products = ev.get_products(category_id=category_dict["id"])
 
-    with open(args.out_path, "w") as f:
+        elif "taxonomy" not in category_dict:
+            all_products[category_dict["name"]] = ev.get_products(category_dict["id"])
+            category_products = ev.get_products(category_dict["id"])
+
+        for product in category_products:
+            product.pop("orgId", None)
+            product.pop("productCode", None)
+            product_rows.append({**product, **{"category": category_dict["name"]}})
+
+    with open(args.out_path, "w", newline="", encoding="utf-8") as f:
         writer = csv.DictWriter(f, fieldnames=product_rows[0].keys())
         writer.writeheader()
         writer.writerows(product_rows)
