@@ -20,12 +20,24 @@ Generates a CSV file of the entire ExpertVoice inventory. CSV entries contain th
 
 Note - as of writing (2023-11-27), ExpertVoice will return an HTTP 500 if you attempt to request product information past the 10,000th element in a given category. The solution to this (while it remains broken on EV's side) is to use nested categories when a given category exceeds 10,000 products. The `depth` parameter in this script is currently hard-coded to `6` to reveal all subcategories. Any value higher than `6` will cause EV to respond with an HTTP 500. Classic.
 
-TODO
-
 #### Arguments
 |Short Name|Long Name|Type|Description|
 |-|-|-|-|
 |`-o`|`--out-path`|`str`|The path at which to save the products CSV. Defaults to ./out.csv|
+|N/A|`--config`|`str`|Path to config file - defaults to ./config.json|
+
+
+### `alert_on_new_query_results.py`
+
+This script executes a query as specified by the user, and logs and results that haven't been seen before. `productCode` is used to track listings. "Seen listings" are tracked globally across all queries, so you should only be alerted once about a given item.
+
+#### Arguments
+|Short Name|Long Name|Type|Description|
+|-|-|-|-|
+|`-q`|`--query-name`|`str`|The name of the query to execute. This must be present in the list of queries|
+|N/A|`--all`|`bool`|If set, execute all queries|
+|`-l`|`--list-queries`|`bool`|If set, list all queries that can be executed and exit|
+|N/A|`--markdown`|`bool`|If set, log URLs in markdown format (for gotify)|
 |N/A|`--config`|`str`|Path to config file - defaults to ./config.json|
 
 ### `deal_unlocker.py`

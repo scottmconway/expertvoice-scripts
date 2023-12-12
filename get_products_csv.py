@@ -25,7 +25,7 @@ def main():
     parser.add_argument(
         "--short-category-names",
         action="store_true",
-        help="If set, only show the bottom-most level in category names"
+        help="If set, only show the bottom-most level in category names",
     )
     parser.add_argument(
         "--category-ids",
@@ -42,7 +42,9 @@ def main():
     ev = ExpertvoiceClient(config)
     all_products = dict()
 
-    categories = ev.get_categories(depth=6, short_category_name=args.short_category_names)
+    categories = ev.get_categories(
+        depth=6, short_category_name=args.short_category_names
+    )
     product_rows = list()
 
     for category_dict in categories:
