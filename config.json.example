@@ -2,5 +2,33 @@
     "auth_info": {
         "username": "username",
         "password": "password"
+    },
+    "logging": {
+        "log_level": 20,
+        "gotify": {
+            "app_token": "",
+            "server_url": "https://example.com",
+            "extras": {
+                "client::display": {
+                    "contentType": "text/markdown"
+                }
+            }
+        }
+    },
+    "saved_queries": {
+        "sleeping pads": {
+            "category_id": 841,
+            "hide_out_of_stock": true
+        },
+        "salomon male shorts friends and family": {
+            "genders": [
+                "Men's"
+            ],
+            "brands": [
+                76422
+            ],
+            "hide_out_of_stock": true,
+            "promotion_friends_and_family": true
+        }
     }
 }

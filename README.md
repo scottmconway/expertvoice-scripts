@@ -31,6 +31,35 @@ Note - as of writing (2023-11-27), ExpertVoice will return an HTTP 500 if you at
 
 This script executes a query as specified by the user, and logs and results that haven't been seen before. `productCode` is used to track listings. "Seen listings" are tracked globally across all queries, so you should only be alerted once about a given item.
 
+#### Query Crafting
+Queries are JSON objects that can contain any combination of parameters that ExpertVoice's search function allows. Taken from `ExpertvoiceClient`'s `search_products` method, the possible parameters are as follows:
+
+```
+search_term: str = "",
+genders: Optional[List[str]] = None,
+brands: Optional[List[int]] = None,
+category_id: Optional[int] = None,
+promotion_extra_savings: bool = False,
+promotion_free_shipping: bool = False,
+promotion_friends_and_family: bool = False,
+promotion_outlet: bool = False,
+promotion_flash_deal: bool = False,
+hide_out_of_stock: bool = False,
+```
+
+`genders` may include the following values:
+```
+Men's
+Women's
+Youth
+Unisex
+```
+
+Brand IDs may be obtained from product page URLs - they are the value after the final slash in the path. For example, the brand ID of this item is `76422`.
+`https://www.expertvoice.com/product/salomon-mens-cross/76422?p=LC1871400`
+
+Query JSONs are destructed and passed as arguments to this function. See `config.json.example` for example queries of varying complexity.
+
 #### Arguments
 |Short Name|Long Name|Type|Description|
 |-|-|-|-|
