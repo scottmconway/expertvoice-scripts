@@ -4,14 +4,21 @@
         "password": "password"
     },
     "logging": {
-        "log_level": 20,
-        "gotify": {
-            "app_token": "",
-            "server_url": "https://example.com",
-            "extras": {
-                "client::display": {
-                    "contentType": "text/markdown"
-                }
+        "version": 1,
+        "handlers": {
+            "gotifyHandler": {
+                "class": "gotify_handler.GotifyHandler",
+                "level": "INFO",
+                "app_token": "",
+                "server_url": "https://gotify.example.com"
+            }
+        },
+        "loggers": {
+            "expertvoice_alert_on_new_query_results": {
+                "handlers": [
+                    "gotifyHandler"
+                ],
+                "level": "INFO"
             }
         }
     },

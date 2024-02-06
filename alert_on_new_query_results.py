@@ -3,9 +3,12 @@
 import argparse
 import json
 import logging
+import logging.config
 import os
 
 import expertvoice_client
+
+APP_NAME = "expertvoice_alert_on_new_query_results"
 
 # TODO overhaul seen listings method
 # instead of being date based, we should instead just pull product IDs
@@ -15,10 +18,11 @@ import expertvoice_client
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "-q", "--query-name", type=str, help="The name of the query to execute"
+    query_group = parser.add_mutually_exclusive_group(required=True)
+    query_group.add_argument(
+        "-q", "--query-name", type=str, nargs=1, help="The name of the query to execute"
     )
-    parser.add_argument(
+    query_group.add_argument(
         "--all",
         action="store_true",
         help="If set, execute all queries for the configured data source",
@@ -49,14 +53,8 @@ def main():
         config = json.load(f)
 
     # logging setup
-    logger = logging.getLogger("expertvoice_alert_on_new_query_results")
-    logging.basicConfig()
-    logging_conf = config.get("logging", dict())
-    logger.setLevel(logging_conf.get("log_level", logging.INFO))
-    if "gotify" in logging_conf:
-        from gotify_handler import GotifyHandler
-
-        logger.addHandler(GotifyHandler(**logging_conf["gotify"]))
+    logging.config.dictConfig(config.get("logging", {"version": 1}))
+    logger = logging.getLogger(APP_NAME)
 
     if args.list_queries:
         print("Saved queries: %s" % (", ".join(sorted(config["saved_queries"].keys()))))
